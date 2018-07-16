@@ -45,29 +45,29 @@ class App
 
     public function run()
     {
+        $output = null;
+        $code = 404;
         $match = $this->router->match();
 
-        if($match) {
+        if ($match) {
             $controller = $this->parseController($match);
             $method = $this->parseMethod($match);
 
-            $output = null;
-            $code = 404;
             try {
                 if ($controller instanceof Controller && method_exists($controller, $method)) {
                     $output = $controller->$method();
-                    $code = $controller->getCode();
-                } elseif ($controller instanceof Controller) {
-                    $output = $controller->notFound();
                     $code = $controller->getCode();
                 }
             } catch (\Exception $e) {
                 $output = $this->getError($e);
                 $code = 500;
             }
-
-            $this->output($output, $code);
+        } else {
+            $controller = new Controller($this->twig, $this->config, $this->data);
+            $output = $controller->notFound();
         }
+
+        $this->output($output, $code);
     }
 
     private function parseController($match)
