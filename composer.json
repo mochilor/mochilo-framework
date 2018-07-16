@@ -1,0 +1,22 @@
+{
+    "name": "diego/mochilo",
+    "description": "Mochilo PHP framework!",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Diego Altamirano Rodríguez",
+            "email": "diego.altamirano.rodriguez@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "twig/twig": "^2.0",
+        "vlucas/phpdotenv": "^2.5",
+        "altorouter/altorouter": "^1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mochilo\\": "src/Mochilo/"
+        }
+    }
+}
