@@ -16,9 +16,13 @@ class Config
      */
     public function __construct(string $configPath)
     {
+        $defaultConfigFile = __DIR__  . '/config/default_config_values.php';
+        $this->values = require_once $defaultConfigFile;
+
         $configFile = $configPath . '/config_values.php';
         if (file_exists($configFile)) {
-            $this->values = require_once $configFile;
+            $configValues = require_once $configFile;
+            $this->values = array_merge($this->values, $configValues);
         }
     }
 
@@ -31,6 +35,11 @@ class Config
         if (isset($this->values[$index])) {
             return $this->values[$index];
         }
+    }
+
+    public function getAll(): array
+    {
+        return $this->values;
     }
 
     public function set(string $index, $value)

@@ -1,10 +1,13 @@
 <?php
 
-namespace Mochilo;
+namespace Mochilo\Controller;
 
+use Mochilo\Config;
+use Mochilo\Data;
+use Mochilo\Helper;
 use Twig_Environment;
 
-class Controller
+class GetController implements ControllerInterface
 {
     /**
      * @var Twig_Environment
@@ -48,9 +51,12 @@ class Controller
         return $this->code;
     }
 
-    public function notFound(): string
+    protected function getDataForView(): array
     {
-        $this->code = 404;
-        return '';
+        return [
+            'data' => $this->data->getData(),
+            'config' => $this->config->getAll(),
+            'helper' => new Helper($this->config),
+        ];
     }
 }

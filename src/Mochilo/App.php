@@ -3,6 +3,7 @@
 namespace Mochilo;
 
 use AltoRouter;
+use Mochilo\Controller\ControllerInterface;
 use Twig_Environment;
 
 class App
@@ -27,6 +28,8 @@ class App
      */
     private $data;
 
+    const TEMPLATES_DIR = 'templates';
+
     /**
      * App constructor.
      *
@@ -41,44 +44,49 @@ class App
         $this->router = $router;
         $this->twig = $twig;
         $this->data = $data;
+        $this->addDefaultTemplatePath();
     }
 
     public function run()
     {
-        $output = null;
+        $output = $this->twig->render("not_found.twig");;
         $code = 404;
         $match = $this->router->match();
 
         if ($match) {
             $controller = $this->parseController($match);
             $method = $this->parseMethod($match);
+            $params = $_POST ?? $match['params'];
 
             try {
-                if ($controller instanceof Controller && method_exists($controller, $method)) {
-                    $output = $controller->$method();
+                if ($controller instanceof ControllerInterface && method_exists($controller, $method)) {
+                    $output = call_user_func(array($controller, $method), $params);
                     $code = $controller->getCode();
                 }
             } catch (\Exception $e) {
                 $output = $this->getError($e);
                 $code = 500;
             }
-        } else {
-            $controller = new Controller($this->twig, $this->config, $this->data);
-            $output = $controller->notFound();
         }
 
         $this->output($output, $code);
     }
 
+    private function addDefaultTemplatePath()
+    {
+        $loader = $this->twig->getLoader();
+        $loader->addPath(dirname(__FILE__) . '/' . self::TEMPLATES_DIR);
+    }
+
     private function parseController($match)
     {
         $class = substr($match['target'], 0, strpos($match['target'], '#'));
-        if (class_exists($class) && is_subclass_of($class, Controller::class)) {
+        if (class_exists($class) && in_array(ControllerInterface::class, class_implements($class))) {
             return new $class($this->twig, $this->config, $this->data);
         }
     }
 
-    private function parseMethod($match)
+    private function parseMethod($match) :string
     {
         return substr($match['target'], strpos($match['target'], '#') + 1);
     }
