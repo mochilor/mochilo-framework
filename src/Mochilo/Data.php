@@ -7,7 +7,7 @@ class Data
     /**
      * @var string
      */
-    private $defaultLang;
+    private $lang;
 
     /**
      * @var string
@@ -17,28 +17,23 @@ class Data
     /**
      * @var array
      */
-    private $data;
+    private $data = [];
 
     /**
      * Data constructor.
      *
-     * @param string $defaultLang
      * @param string $dataPath
      */
-    public function __construct(string $defaultLang, string $dataPath)
+    public function __construct(string $dataPath)
     {
-        $this->defaultLang = $defaultLang;
         $this->dataPath = $dataPath;
-        $this->prepareData();
     }
 
-    public function prepareData(string $lang = null)
+    public function prepareData(string $lang)
     {
-        if (!empty($lang)) {
-            $this->defaultLang = $lang;
-        }
+        $this->lang = $lang;
 
-        $file = sprintf($this->dataPath . '/%s.php', $this->defaultLang);
+        $file = sprintf($this->dataPath . '/%s.php', $lang);
 
         if (file_exists($file)) {
             $this->data = require $file;

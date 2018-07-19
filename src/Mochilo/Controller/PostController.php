@@ -4,15 +4,10 @@ namespace Mochilo\Controller;
 
 use Mochilo\Config;
 use Mochilo\Data;
-use Twig_Environment;
+use PHPMailer\PHPMailer\PHPMailer;
 
 class PostController implements ControllerInterface
 {
-    /**
-     * @var Twig_Environment
-     */
-    protected $twig;
-
     /**
      * @var array
      */
@@ -27,19 +22,23 @@ class PostController implements ControllerInterface
      * @var int
      */
     protected $code = 200;
+    /**
+     * @var PHPMailer
+     */
+    private $mailer;
 
     /**
      * MisterProper constructor.
      *
-     * @param Twig_Environment $twig
      * @param Config $config
      * @param Data $data
+     * @param PHPMailer $mailer
      */
-    public function __construct(Twig_Environment $twig, Config $config, Data $data)
+    public function __construct(Config $config, Data $data, PHPMailer $mailer)
     {
-        $this->twig = $twig;
         $this->config = $config;
         $this->data = $data;
+        $this->mailer = $mailer;
     }
 
     public function getCode(): int

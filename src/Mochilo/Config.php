@@ -32,9 +32,21 @@ class Config
      */
     public function get(string $index)
     {
-        if (isset($this->values[$index])) {
-            return $this->values[$index];
-        }
+        $path = explode('.', $index);
+        $currentElement = $this->values;
+
+        do {
+            if (!isset($currentElement[$path[0]])) {
+                return null;
+            }
+
+            $currentElement = $currentElement[$path[0]];
+
+            unset($path[0]);
+            $path = array_values($path);
+        } while (!empty($path));
+
+        return $currentElement;
     }
 
     public function getAll(): array

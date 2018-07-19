@@ -3,6 +3,7 @@
 namespace Mochilo;
 
 use AltoRouter;
+use DI\Container;
 use Mochilo\Controller\ControllerInterface;
 use Twig_Environment;
 
@@ -29,6 +30,10 @@ class App
     private $data;
 
     const TEMPLATES_DIR = 'templates';
+    /**
+     * @var Container
+     */
+    private $container;
 
     /**
      * App constructor.
@@ -38,18 +43,21 @@ class App
      * @param Twig_Environment $twig
      * @param Data $data
      */
-    public function __construct(Config $config, AltoRouter $router, Twig_Environment $twig, Data $data)
+    public function __construct(Config $config, AltoRouter $router, Twig_Environment $twig, Data $data, Container $container)
     {
         $this->config = $config;
         $this->router = $router;
         $this->twig = $twig;
         $this->data = $data;
-        $this->addDefaultTemplatePath();
+        $this->container = $container;
     }
 
     public function run()
     {
-        $output = $this->twig->render("not_found.twig");;
+        $a = $this->config->getAll();
+        $this->data->prepareData($this->config->get('lang'));
+        $this->addDefaultTemplatePath();
+        $output = $this->twig->render("not_found.twig");
         $code = 404;
         $match = $this->router->match();
 
@@ -82,7 +90,7 @@ class App
     {
         $class = substr($match['target'], 0, strpos($match['target'], '#'));
         if (class_exists($class) && in_array(ControllerInterface::class, class_implements($class))) {
-            return new $class($this->twig, $this->config, $this->data);
+            return $this->container->get($class);
         }
     }
 

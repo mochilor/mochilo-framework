@@ -55,7 +55,7 @@ class GetController implements ControllerInterface
     {
         return [
             'data' => $this->data->getData(),
-            'config' => $this->config->getAll(),
+            'config' => $this->config,
             'helper' => new Helper($this->config),
         ];
     }
