@@ -17,13 +17,34 @@ class Config
     public function __construct(string $configPath)
     {
         $defaultConfigFile = __DIR__  . '/config/default_config_values.php';
-        $this->values = require_once $defaultConfigFile;
+        $this->values = require $defaultConfigFile;
 
         $configFile = $configPath . '/config_values.php';
         if (file_exists($configFile)) {
-            $configValues = require_once $configFile;
-            $this->values = array_merge($this->values, $configValues);
+            $configValues = require $configFile;
+            $this->values = $this->mergeConfigValues($this->values, $configValues);
         }
+    }
+
+    /**
+     * @see http://php.net/manual/es/function.array-merge-recursive.php#92195
+     * @param array $array1
+     * @param array $array2
+     * @return array
+     */
+    private function mergeConfigValues(array $array1, array $array2)
+    {
+        $merged = $array1;
+
+        foreach ($array2 as $key => &$value) {
+            if (is_array($value) && isset ($merged [$key]) && is_array($merged [$key])) {
+                $merged [$key] = $this->mergeConfigValues($merged [$key], $value);
+            } else {
+                $merged [$key] = $value;
+            }
+        }
+
+        return $merged;
     }
 
     /**

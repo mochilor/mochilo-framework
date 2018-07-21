@@ -4,7 +4,6 @@ namespace Mochilo\Controller;
 
 use Mochilo\Config;
 use Mochilo\Data;
-use PHPMailer\PHPMailer\PHPMailer;
 
 class PostController implements ControllerInterface
 {
@@ -22,23 +21,17 @@ class PostController implements ControllerInterface
      * @var int
      */
     protected $code = 200;
-    /**
-     * @var PHPMailer
-     */
-    private $mailer;
 
     /**
      * MisterProper constructor.
      *
      * @param Config $config
      * @param Data $data
-     * @param PHPMailer $mailer
      */
-    public function __construct(Config $config, Data $data, PHPMailer $mailer)
+    public function __construct(Config $config, Data $data)
     {
         $this->config = $config;
         $this->data = $data;
-        $this->mailer = $mailer;
     }
 
     public function getCode(): int

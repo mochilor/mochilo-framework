@@ -28,6 +28,10 @@ class GetController implements ControllerInterface
      * @var int
      */
     protected $code = 200;
+    /**
+     * @var Helper
+     */
+    private $helper;
 
     /**
      * MisterProper constructor.
@@ -35,12 +39,14 @@ class GetController implements ControllerInterface
      * @param Twig_Environment $twig
      * @param Config $config
      * @param Data $data
+     * @param Helper $helper
      */
-    public function __construct(Twig_Environment $twig, Config $config, Data $data)
+    public function __construct(Twig_Environment $twig, Config $config, Data $data, Helper $helper)
     {
         $this->twig = $twig;
         $this->config = $config;
         $this->data = $data;
+        $this->helper = $helper;
     }
 
     /**
@@ -56,7 +62,7 @@ class GetController implements ControllerInterface
         return [
             'data' => $this->data->getData(),
             'config' => $this->config,
-            'helper' => new Helper($this->config),
+            'helper' => $this->helper,
         ];
     }
 }

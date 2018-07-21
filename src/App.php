@@ -54,7 +54,6 @@ class App
 
     public function run()
     {
-        $a = $this->config->getAll();
         $this->data->prepareData($this->config->get('lang'));
         $this->addDefaultTemplatePath();
         $output = $this->twig->render("not_found.twig");
