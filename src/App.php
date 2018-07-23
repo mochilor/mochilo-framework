@@ -29,11 +29,13 @@ class App
      */
     private $data;
 
-    const TEMPLATES_DIR = 'templates';
     /**
      * @var Container
      */
     private $container;
+
+    const TEMPLATES_DIR = 'templates';
+    const SESSION_TIME = 1800;
 
     /**
      * App constructor.
@@ -54,6 +56,7 @@ class App
 
     public function run()
     {
+        $this->handleSession();
         $this->data->prepareData($this->config->get('lang'));
         $this->addDefaultTemplatePath();
         $output = $this->twig->render("not_found.twig");
@@ -77,6 +80,26 @@ class App
         }
 
         $this->output($output, $code);
+    }
+
+    private function handleSession()
+    {
+        if (
+            !empty($_SESSION) &&
+            isset($_SESSION['LAST_ACTIVITY']) &&
+            (time() - $_SESSION['LAST_ACTIVITY'] > self::SESSION_TIME)
+        ) {
+            session_unset();
+            session_destroy();
+        }
+
+        session_start();
+        $_SESSION['LAST_ACTIVITY'] = time();
+
+        if (!isset($_SESSION['token'])) {
+            $_SESSION['token'] = bin2hex(random_bytes(32));
+            $_SESSION['token_time'] = time();
+        }
     }
 
     private function addDefaultTemplatePath()

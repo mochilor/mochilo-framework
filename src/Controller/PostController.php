@@ -4,6 +4,7 @@ namespace Mochilo\Controller;
 
 use Mochilo\Config;
 use Mochilo\Data;
+use Mochilo\Exception\CSRFTokenException;
 
 class PostController implements ControllerInterface
 {
@@ -63,5 +64,16 @@ class PostController implements ControllerInterface
         ];
 
         return json_encode($data);
+    }
+
+    /**
+     * @param string $token
+     * @throws CSRFTokenException
+     */
+    protected function validateToken(string $token)
+    {
+        if (!empty($_SESSION) && isset($_SESSION['token']) && $token != $_SESSION['token']) {
+            throw new CSRFTokenException();
+        }
     }
 }

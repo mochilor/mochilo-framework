@@ -38,4 +38,13 @@ class Helper
 
         return sprintf($img, $srcValue, $heightValue, $widthValue, $altValue, $classValue, $idValue);
     }
+
+    public function token()
+    {
+        if (!empty($_SESSION) && isset($_SESSION['token'])) {
+            return $_SESSION['token'];
+        }
+
+        return '';
+    }
 }
