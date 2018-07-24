@@ -11,6 +11,7 @@ class DummyMailer implements MailerInterface
     private $username;
     private $password;
     private $to = [];
+    private $replyTo = [];
     private $cc = [];
     private $from = [];
     private $subject;
@@ -28,6 +29,14 @@ class DummyMailer implements MailerInterface
     public function addTo(string $address, string $name = null)
     {
         $this->to[] = [
+            'address' => $address,
+            'name' => $name,
+        ];
+    }
+
+    public function addReplyTo(string $address, string $name = null)
+    {
+        $this->replyTo[] = [
             'address' => $address,
             'name' => $name,
         ];

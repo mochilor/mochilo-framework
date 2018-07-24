@@ -35,12 +35,19 @@ class SMTPMailer implements MailerInterface
         $this->mailer->Port = $config->get('mail.port');
         $this->mailer->Username = $config->get('mail.username');
         $this->mailer->Password = $config->get('mail.password');
+        $this->mailer->SMTPAuth = $config->get('mail.smtp_auth');
+        $this->mailer->SMTPSecure = $config->get('mail.smtp_secure');
         $this->setFrom($config->get('mail.address'), $config->get('mail.name'));
     }
 
     public function addTo(string $address, string $name = null)
     {
         $this->mailer->AddAddress($address, $name);
+    }
+
+    public function addReplyTo(string $address, string $name = null)
+    {
+        $this->mailer->addReplyTo($address, $name);
     }
 
     public function addCc(string $address, string $name = null)
