@@ -56,4 +56,13 @@ class Helper
             $_SERVER['REQUEST_URI']
         );
     }
+
+    public function getCookie(string $cookie)
+    {
+        if(isset($_COOKIE[$cookie])) {
+            return $_COOKIE[$cookie];
+        }
+
+        return null;
+    }
 }

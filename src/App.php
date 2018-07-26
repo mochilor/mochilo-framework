@@ -36,6 +36,7 @@ class App
 
     const TEMPLATES_DIR = 'templates';
     const SESSION_TIME = 1800;
+    const COOKIE_NAME = 'cookies';
 
     /**
      * App constructor.
@@ -57,6 +58,7 @@ class App
     public function run()
     {
         $this->handleSession();
+        $this->setCookie();
         $this->data->prepareData($this->config->get('lang'));
         $this->addDefaultTemplatePath();
         $output = $this->twig->render("not_found.twig");
@@ -100,6 +102,16 @@ class App
             $_SESSION['token'] = bin2hex(random_bytes(32));
             $_SESSION['token_time'] = time();
         }
+    }
+
+    private function setCookie()
+    {
+        if (isset($_COOKIE[self::COOKIE_NAME])) {
+            $this->twig->addGlobal('cookie', $_COOKIE[self::COOKIE_NAME]);
+        }
+        $expire = time() + 60 * 60 * 24 * 365;
+
+        setcookie(self::COOKIE_NAME, 1, $expire, '/', '', false, true);
     }
 
     private function addDefaultTemplatePath()
