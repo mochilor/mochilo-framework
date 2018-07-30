@@ -28,10 +28,11 @@ class GetController implements ControllerInterface
      * @var int
      */
     protected $code = 200;
+
     /**
      * @var Helper
      */
-    private $helper;
+    protected $helper;
 
     /**
      * MisterProper constructor.

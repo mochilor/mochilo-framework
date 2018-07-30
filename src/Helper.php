@@ -29,7 +29,7 @@ class Helper
     ) {
         $img = '<img %s%s%s%s%s%s/>';
 
-        $srcValue = sprintf('src="%s/%s" ', $this->config->get('img_url'), $src);
+        $srcValue = sprintf('src="%s%s/%s" ', $this->url(), $this->config->get('img_url'), $src);
         $heightValue = $height ? sprintf('height="%d" ', $height): '';
         $widthValue = $width ? sprintf('width="%d" ', $width): '';
         $altValue = $alt ? sprintf('alt="%s" ', $alt): '';
@@ -49,12 +49,14 @@ class Helper
     }
 
     public function url(){
-        return sprintf(
+        $url = sprintf(
             "%s://%s%s",
             isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
             $_SERVER['SERVER_NAME'],
             $_SERVER['REQUEST_URI']
         );
+
+        return substr($url, -1) == '/' ? substr($url, 0, -1) : $url;
     }
 
     public function getCookie(string $cookie)
