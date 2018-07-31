@@ -6,7 +6,9 @@ use AltoRouter;
 use DI\Container;
 use DI\ContainerBuilder;
 use Dotenv\Dotenv;
+use Mochilo\Mail\DummyMailer;
 use Mochilo\Mail\MailerInterface;
+use Mochilo\Mail\NativeMailer;
 use Mochilo\Mail\SMTPMailer;
 use PHPMailer\PHPMailer\PHPMailer;
 use Twig_Loader_Filesystem;
@@ -62,7 +64,7 @@ class Starter
             // Interfaces implementation
             Twig_LoaderInterface::class => \DI\create(Twig_Loader_Filesystem::class)
                 ->constructor($this->paths['templatesPath']),
-            MailerInterface::class => \DI\create(SMTPMailer::class)->constructor(\DI\create(PHPMailer::class)),
+            MailerInterface::class => $this->getMailerImplementation(),
         ];
     }
 
@@ -79,5 +81,17 @@ class Starter
             error_reporting(E_ALL);
             ini_set('display_errors', 1);
         }
+    }
+
+    private function getMailerImplementation()
+    {
+        $mailDriver = filter_var(getenv('MAIL_DRIVER'));
+        if ($mailDriver == 'smtp') {
+            return \DI\create(SMTPMailer::class)->constructor(\DI\create(PHPMailer::class));
+        } elseif ($mailDriver == 'native') {
+            return \DI\create(NativeMailer::class);
+        }
+
+        return \DI\create(DummyMailer::class);
     }
 }
