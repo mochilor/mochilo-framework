@@ -18,5 +18,6 @@ return [
         'smtp_auth' => true,
         'smtp_secure' => 'tls',
         'name' => 'My name',
-    ]
+    ],
+    'set_cookies' => true,
 ];

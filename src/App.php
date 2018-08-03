@@ -58,7 +58,6 @@ class App
     public function run()
     {
         $this->handleSession();
-        $this->setCookie();
         $this->data->prepareData($this->config->get('lang'));
         $this->addDefaultTemplatePath();
         $output = $this->twig->render("not_found.twig");
@@ -86,6 +85,10 @@ class App
 
     private function handleSession()
     {
+        if (!$this->config->get('set_cookies')) {
+            return;
+        }
+
         if (
             !empty($_SESSION) &&
             isset($_SESSION['LAST_ACTIVITY']) &&
@@ -102,6 +105,8 @@ class App
             $_SESSION['token'] = bin2hex(random_bytes(32));
             $_SESSION['token_time'] = time();
         }
+
+        $this->setCookie();
     }
 
     private function setCookie()
