@@ -37,6 +37,7 @@ class SMTPMailer implements MailerInterface
         $this->mailer->Password = $config->get('mail.password');
         $this->mailer->SMTPAuth = $config->get('mail.smtp_auth');
         $this->mailer->SMTPSecure = $config->get('mail.smtp_secure');
+        $this->mailer->CharSet = 'UTF-8';
         $this->setFrom($config->get('mail.address'), $config->get('mail.name'));
     }
 
