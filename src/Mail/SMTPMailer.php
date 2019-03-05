@@ -82,6 +82,10 @@ class SMTPMailer implements MailerInterface
         } catch (\Exception $e) {
             $this->errorMessage = $e->getMessage();
         }
+
+        if ($this->mailer->isError()) {
+            $this->errorMessage = $this->mailer->ErrorInfo;
+        }
     }
 
     public function getErrorMessage():? string
