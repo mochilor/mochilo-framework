@@ -5,7 +5,7 @@ namespace Mochilo;
 use AltoRouter;
 use DI\Container;
 use Mochilo\Controller\ControllerInterface;
-use Twig_Environment;
+use Twig\Environment;
 
 class App
 {
@@ -20,7 +20,7 @@ class App
     private $router;
 
     /**
-     * @var Twig_Environment
+     * @var Environment
      */
     private $twig;
 
@@ -43,10 +43,10 @@ class App
      *
      * @param Config $config
      * @param AltoRouter $router
-     * @param Twig_Environment $twig
+     * @param Environment $twig
      * @param Data $data
      */
-    public function __construct(Config $config, AltoRouter $router, Twig_Environment $twig, Data $data, Container $container)
+    public function __construct(Config $config, AltoRouter $router, Environment $twig, Data $data, Container $container)
     {
         $this->config = $config;
         $this->router = $router;

@@ -11,8 +11,6 @@ use Mochilo\Mail\MailerInterface;
 use Mochilo\Mail\NativeMailer;
 use Mochilo\Mail\SMTPMailer;
 use PHPMailer\PHPMailer\PHPMailer;
-use Twig_Loader_Filesystem;
-use Twig_LoaderInterface;
 
 class Starter
 {
@@ -62,7 +60,7 @@ class Starter
             ),
 
             // Interfaces implementation
-            Twig_LoaderInterface::class => \DI\create(Twig_Loader_Filesystem::class)
+            \Twig\Loader\LoaderInterface::class => \DI\create(\Twig\Loader\FilesystemLoader::class)
                 ->constructor($this->paths['templatesPath']),
             MailerInterface::class => $this->getMailerImplementation(),
         ];
