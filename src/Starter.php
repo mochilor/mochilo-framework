@@ -10,7 +10,10 @@ use Mochilo\Mail\DummyMailer;
 use Mochilo\Mail\MailerInterface;
 use Mochilo\Mail\NativeMailer;
 use Mochilo\Mail\SMTPMailer;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use PHPMailer\PHPMailer\PHPMailer;
+use Monolog\ErrorHandler;
 
 class Starter
 {
@@ -40,6 +43,11 @@ class Starter
         $dotenv->load();
 
         $this->setErrorLevel();
+
+        $logger = new Logger('app');
+        $logger->pushHandler(new StreamHandler($this->paths['logPath'] . '/app.log', Logger::DEBUG));
+
+        ErrorHandler::register($logger);
 
         $dependencies = array_merge($this->getFrameworkDependencies(), $this->appDependencies);
         $container = $this->createContainer($dependencies);
