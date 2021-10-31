@@ -98,7 +98,7 @@ class Starter
         } elseif ($mailDriver == 'native') {
             return \DI\create(NativeMailer::class);
         } elseif ($mailDriver == 'oauth') {
-            return \DI\create(OAUTHMailer::class);
+            return \DI\create(OAUTHMailer::class)->constructor(\DI\create(PHPMailer::class));
         }
 
         return \DI\create(DummyMailer::class);
