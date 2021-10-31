@@ -9,6 +9,7 @@ use Dotenv\Dotenv;
 use Mochilo\Mail\DummyMailer;
 use Mochilo\Mail\MailerInterface;
 use Mochilo\Mail\NativeMailer;
+use Mochilo\Mail\OAUTHMailer;
 use Mochilo\Mail\SMTPMailer;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -96,6 +97,8 @@ class Starter
             return \DI\create(SMTPMailer::class)->constructor(\DI\create(PHPMailer::class));
         } elseif ($mailDriver == 'native') {
             return \DI\create(NativeMailer::class);
+        } elseif ($mailDriver == 'oauth') {
+            return \DI\create(OAUTHMailer::class);
         }
 
         return \DI\create(DummyMailer::class);
