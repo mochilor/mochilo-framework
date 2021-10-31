@@ -18,6 +18,9 @@ return [
         'smtp_auth' => true,
         'smtp_secure' => 'tls',
         'name' => 'My name',
+        'client_id' => '',
+        'client_secret' => '',
+        'refresh_token' => '',
     ],
     'set_cookies' => true,
 ];
