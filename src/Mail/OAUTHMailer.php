@@ -96,15 +96,7 @@ class OAUTHMailer implements MailerInterface
 
     public function send()
     {
-        try {
-            $this->mailer->send();
-        } catch (\Exception $e) {
-            $this->errorMessage = $e->getMessage();
-        }
-
-        if ($this->mailer->isError()) {
-            $this->errorMessage = $this->mailer->ErrorInfo;
-        }
+        $this->mailer->send();
     }
 
     public function getErrorMessage():? string

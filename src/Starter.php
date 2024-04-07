@@ -15,6 +15,8 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use PHPMailer\PHPMailer\PHPMailer;
 use Monolog\ErrorHandler;
+use function DI\create;
+use function DI\factory;
 
 class Starter
 {
@@ -65,11 +67,11 @@ class Starter
             AltoRouter::class => \DI\autowire()->constructorParameter('routes', $this->routes),
             Helper::class => \DI\autowire()->constructorParameter(
                 'config',
-                \DI\create(Config::class)->constructor($this->paths['configPath'])
+                create(Config::class)->constructor($this->paths['configPath'])
             ),
 
             // Interfaces implementation
-            \Twig\Loader\LoaderInterface::class => \DI\create(\Twig\Loader\FilesystemLoader::class)
+            \Twig\Loader\LoaderInterface::class => create(\Twig\Loader\FilesystemLoader::class)
                 ->constructor($this->paths['templatesPath']),
             MailerInterface::class => $this->getMailerImplementation(),
         ];
@@ -93,14 +95,16 @@ class Starter
     private function getMailerImplementation()
     {
         $mailDriver = filter_var(getenv('MAIL_DRIVER'));
+        $phpmailer = fn () => new PHPMailer(true);
+
         if ($mailDriver == 'smtp') {
-            return \DI\create(SMTPMailer::class)->constructor(\DI\create(PHPMailer::class));
+            return create(SMTPMailer::class)->constructor(factory($phpmailer));
         } elseif ($mailDriver == 'native') {
-            return \DI\create(NativeMailer::class);
+            return create(NativeMailer::class);
         } elseif ($mailDriver == 'oauth') {
-            return \DI\create(OAUTHMailer::class)->constructor(\DI\create(PHPMailer::class));
+            return create(OAUTHMailer::class)->constructor(factory($phpmailer));
         }
 
-        return \DI\create(DummyMailer::class);
+        return create(DummyMailer::class);
     }
 }
